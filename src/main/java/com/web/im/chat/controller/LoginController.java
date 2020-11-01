@@ -37,6 +37,7 @@ public class LoginController {
         if(user==null){
             return "fail";
         }
+        session.setAttribute("id",user.getId());
         session.setAttribute("userName",user.getName());
         session.setAttribute("status",user.getStatus());
         session.setAttribute("sign",user.getSign());
