@@ -24,3 +24,4 @@ create TABLE friend(
 insert friend values (1000,10000,'亲人',10001);
 insert friend values (null,10000,'朋友',10002);
 insert friend values (null,10000,'朋友',10003);
+insert friend values (null,10001,'同学',10000);

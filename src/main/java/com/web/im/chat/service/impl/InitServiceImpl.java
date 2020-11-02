@@ -33,7 +33,7 @@ public class InitServiceImpl implements InitService {
         mine.put("id",user.getId());
         mine.put("status",user.getStatus());
         mine.put("sign",user.getSign());
-        mine.put("avatar",user.getSign());
+        mine.put("avatar",user.getAvatar());
 
         result.put("mine",mine);
         result.put("friend",getFriends(id));

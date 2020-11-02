@@ -44,7 +44,7 @@ public class LoginDao {
     public RegisterEnum register(String userName, String password) {
         if (isExistUser(userName))
             return RegisterEnum.ALREADYEXIST;
-        String sql = "insert into user values(null,?,?,null,null,null)";
+        String sql = "insert into user values(null,?,?,'online','我愿意化为一阵风，从你的眼前轻轻地划过','http://tp2.sinaimg.cn/2518326245/180/5636099025/0')";
         Object[] args = new Object[2];
         args[0] = userName;
         args[1] = password;
