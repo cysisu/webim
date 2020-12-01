@@ -20,9 +20,8 @@ if(!/^http(s*):\/\//.test(location.href)){
   alert('请部署到localhost上查看该演示');
 }
 
-
+var socket;
 layui.use('layim', function(layim){
-  var socket = new WebSocket('ws://localhost:8080/forshow/websocket/1234');
   //演示自动回复
   var autoReplay = [
     '您好，我现在有事不在，一会再和您联系。',
@@ -45,20 +44,7 @@ layui.use('layim', function(layim){
       ,data: {}
     }
 
-    //或采用以下方式初始化接口
-    /*
-    ,init: {
-      mine: {
-        "username": "LayIM体验者" //我的昵称
-        ,"id": "100000123" //我的ID
-        ,"status": "online" //在线状态 online：在线、hide：隐身
-        ,"remark": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
-        ,"avatar": "a.jpg" //我的头像
-      }
-      ,friend: []
-      ,group: []
-    }
-    */
+
 
 
     //查看群员接口
@@ -147,8 +133,19 @@ layui.use('layim', function(layim){
 
   //监听layim建立就绪
   layim.on('ready', function(res){
-
+    socket = new WebSocket('ws://localhost:8080/forshow/websocket/'+res.mine.id);
     //console.log(res.mine);
+
+
+      socket.onmessage = function(res){
+          console.log("[onmessage]");
+          console.log(res);
+          res = JSON.parse(res);
+          layim.getMessage(res.data);
+          if(res.emit === 'chatMessage'){
+            layim.getMessage(res.data); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
+          }
+      };
 
     layim.msgbox(5); //模拟消息盒子有新消息，实际使用时，一般是动态获得
 
@@ -192,39 +189,19 @@ layui.use('layim', function(layim){
 
   //监听发送消息
   layim.on('sendMessage', function(data){
-    socket.send('Hi Server, I am LayIM!');
     var To = data.to;
-    //console.log(data);
+    console.log(data)
+    socket.send(JSON.stringify({
+        type: 'chatMessage' //随便定义，用于在服务端区分消息类型
+        ,data: data
+    }));
 
 
     if(To.type === 'friend'){
       layim.setChatStatus('<span style="color:#FF5722;">对方正在输入。。。</span>');
     }
-
-    //演示自动回复
-    setTimeout(function(){
-      var obj = {};
-      if(To.type === 'group'){
-        obj = {
-          username: '模拟群员'+(Math.random()*100|0)
-          ,avatar: layui.cache.dir + 'images/face/'+ (Math.random()*72|0) + '.gif'
-          ,id: To.id
-          ,type: To.type
-          ,content: autoReplay[Math.random()*9|0]
-        }
-      } else {
-        obj = {
-          username: To.name
-          ,avatar: To.avatar
-          ,id: To.id
-          ,type: To.type
-          ,content: autoReplay[Math.random()*9|0]
-        }
-        layim.setChatStatus('<span style="color:#FF5722;">在线</span>');
-      }
-      layim.getMessage(obj);
-    }, 1000);
   });
+
 
   //监听查看群员
   layim.on('members', function(data){
