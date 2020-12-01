@@ -1,18 +1,22 @@
 package com.web.im.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Data
-public class ChatMessage {
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer","handler"})
+public class ChatMessage implements Serializable {
     private String username;
     private String avatar;
     private String id;
-    private String name;
     private String type;
     private String content;
     private Integer cid;

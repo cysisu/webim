@@ -138,13 +138,15 @@ layui.use('layim', function(layim){
 
 
       socket.onmessage = function(res){
-          console.log("[onmessage]");
-          console.log(res);
-          res = JSON.parse(res);
-          layim.getMessage(res.data);
-          if(res.emit === 'chatMessage'){
-            layim.getMessage(res.data); //res.data即你发送消息传递的数据（阅读：监听发送的消息）
-          }
+          var content=res.data["content"];
+          console.log("[content]:"+content);
+          console.log("[type of data]:"+(typeof res.data));
+          data=JSON.parse(res.data);
+          console.log("[data]:"+data);
+          console.log("[type of data]:"+(typeof data));
+          var obj={id:100};
+          layim.getMessage(data);
+
       };
 
     layim.msgbox(5); //模拟消息盒子有新消息，实际使用时，一般是动态获得
@@ -166,25 +168,6 @@ layui.use('layim', function(layim){
       ,remark: "本人冲田杏梨将结束AV女优的工作"
     });
 
-    setTimeout(function(){
-      //接受消息（如果检测到该socket）
-      layim.getMessage({
-        username: "Hi"
-        ,avatar: "http://qzapp.qlogo.cn/qzapp/100280987/56ADC83E78CEC046F8DF2C5D0DD63CDE/100"
-        ,id: "10000111"
-        ,type: "friend"
-        ,content: "临时："+ new Date().getTime()
-      });
-
-      /*layim.getMessage({
-        username: "贤心"
-        ,avatar: "http://tp1.sinaimg.cn/1571889140/180/40030060651/1"
-        ,id: "100001"
-        ,type: "friend"
-        ,content: "嗨，你好！欢迎体验LayIM。演示标记："+ new Date().getTime()
-      });*/
-
-    }, 3000);
   });
 
   //监听发送消息
