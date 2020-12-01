@@ -20,8 +20,9 @@ if(!/^http(s*):\/\//.test(location.href)){
   alert('请部署到localhost上查看该演示');
 }
 
-layui.use('layim', function(layim){
 
+layui.use('layim', function(layim){
+  var socket = new WebSocket('ws://localhost:8080/forshow/websocket/1234');
   //演示自动回复
   var autoReplay = [
     '您好，我现在有事不在，一会再和您联系。',
@@ -191,8 +192,10 @@ layui.use('layim', function(layim){
 
   //监听发送消息
   layim.on('sendMessage', function(data){
+    socket.send('Hi Server, I am LayIM!');
     var To = data.to;
     //console.log(data);
+
 
     if(To.type === 'friend'){
       layim.setChatStatus('<span style="color:#FF5722;">对方正在输入。。。</span>');
